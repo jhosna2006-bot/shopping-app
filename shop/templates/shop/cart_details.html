@@ -1,0 +1,65 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Shopping Cart</title>
+    <link rel="stylesheet" href="{% static 'shop/styles.css' %}">
+</head>
+<body>
+
+<header>
+    <h1>My Shopping Cart ({{ cart_count }})</h1>
+    <a href="{% url 'shop:product_list' %}">Continue Shopping</a>
+</header>
+
+{% if items %}
+
+<ul>
+    {% for item in items %}
+    <li>
+        <h3>{{ item.product.name }}</h3>
+
+        <p>Price: ₹{{ item.product.price }}</p>
+
+        <p>Quantity: {{ item.quantity }}</p>
+
+        <p>Total: ₹{{ item.line_total }}</p>
+
+        <form method="post" action="{% url 'shop:cart_add' item.product.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit">Add More</button>
+        </form>
+
+        <form method="post" action="{% url 'shop:cart_update' item.product.id %}">
+            {% csrf_token %}
+            <input type="number" name="quantity"
+                   value="{{ item.quantity }}"
+                   min="0" max="{{ item.product.stock }}">
+            <button type="submit">Update</button>
+        </form>
+
+        <form method="post" action="{% url 'shop:cart_remove' item.product.id %}">
+            {% csrf_token %}
+            <button type="submit">Remove</button>
+        </form>
+
+    </li>
+    <hr>
+    {% endfor %}
+</ul>
+
+<h2>Grand Total: ₹{{ total }}</h2>
+
+{% else %}
+
+<h2>Your Cart is Empty!</h2>
+<p>Add products to your cart to see them here.</p>
+
+{% endif %}
+
+<a href="{% url 'shop:product_list' %}">Add More Products</a>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shop</title>
+  <link rel="stylesheet" href="{% static 'shop/styles.css' %}">
+</head>
+<body>
+  <header>
+    <h1>Products</h1>
+    </span></a>
+  </header>
+
+  <div class="grid">
+    {% for product in products %}
+    <article>
+      <h2>{{ product.name }}</h2>
+      <p>{{ product.description }}</p>
+      <p><strong>{{ product.price }}</strong> (Stock: {{ product.stock }})</p>
+    
+    </article>
+    {% empty %}
+    <p>No products are available yet.</p>
+    {% endfor %}
+  </div>
+</body>
+</html>
